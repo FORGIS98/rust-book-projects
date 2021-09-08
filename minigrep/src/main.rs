@@ -1,4 +1,4 @@
-use std::env; // To read command-line args
+use std::{env, fs};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -7,5 +7,7 @@ fn main() {
     let query = &args[1];
     let filename = &args[2];
 
-    println!("Search for `{}` in `{}`", query, filename);
+    let file_content = fs::read_to_string(filename).expect("Error reading the file.");
+
+    println!("Here is the content:\n\n{}", file_content);
 }
