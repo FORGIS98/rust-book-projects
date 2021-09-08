@@ -3,11 +3,23 @@ use std::{env, fs};
 fn main() {
     let args: Vec<String> = env::args().collect();
 
-    // &args[0] = program name
-    let query = &args[1];
-    let filename = &args[2];
+    let config = Config::new(&args);
 
-    let file_content = fs::read_to_string(filename).expect("Error reading the file.");
+    let file_content = fs::read_to_string(config.filename).expect("Error reading the file.");
 
     println!("Here is the content:\n\n{}", file_content);
+}
+
+struct Config {
+    query: String,
+    filename: String,
+}
+
+impl Config {
+    fn new(args: &[String]) -> Config {
+        let query = args[1].clone();
+        let filename = args[2].clone();
+
+        Config { query, filename }
+    }
 }
