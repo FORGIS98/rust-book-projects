@@ -19,10 +19,21 @@ fn main() {
 
         let guess: u32 = match guess.trim().parse() {
             Ok(num) => num,
-            Err(_) => continue,
+            Err(_) => {
+                eprintln!("Error, input a positive number!");
+                continue;
+            }
         };
 
-        match guess.cmp(&secret_number) {
+        let guess = match Guess::new(guess) {
+            Ok(guess) => guess,
+            Err(e) => {
+                eprintln!("{}", e);
+                continue;
+            }
+        };
+
+        match guess.value().cmp(&secret_number) {
             Ordering::Less => println!("Too small!"),
             Ordering::Greater => println!("Too big!"),
             Ordering::Equal => {
@@ -38,5 +49,23 @@ fn main() {
             counter -= 1;
             println!("Number of attempts: {}", counter);
         }
+    }
+}
+
+pub struct Guess {
+    value: u32,
+}
+
+impl Guess {
+    pub fn new(value: u32) -> Result<Guess, String> {
+        if value < 1 || value > 100 {
+            return Err(String::from("Guess value must be between 1 and 100"));
+        }
+
+        Ok(Guess { value })
+    }
+
+    pub fn value(&self) -> u32 {
+        self.value
     }
 }
